@@ -1,0 +1,7 @@
+{
+    "name": "bss/coding-standard",
+    "version": "1.0.0",
+    "require": {
+        "slevomat/coding-standard": "^6.4"
+    }
+}

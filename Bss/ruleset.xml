@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<ruleset name="Bss Coding Standard">
+    <description>Bss coding standard</description>
+
+    <rule ref="Bss.Commenting.UselessInheritDocComment"/>
+    <rule ref="SlevomatCodingStandard.Commenting.EmptyComment"/>
+
+    <rule ref="Squiz.Commenting.FunctionComment.Missing"/>
+    <rule ref="Squiz.Commenting.VariableComment.Missing"/>
+    <rule ref="Squiz.Commenting.ClassComment.Missing"/>
+
+    <rule ref="SlevomatCodingStandard.Namespaces.DisallowGroupUse"/>
+    <rule ref="SlevomatCodingStandard.Namespaces.MultipleUsesPerLine"/>
+    <rule ref="SlevomatCodingStandard.TypeHints.DeclareStrictTypes">
+        <properties>
+            <property name="linesCountBeforeDeclare" value="0"/>
+            <property name="linesCountAfterDeclare" value="0"/>
+            <property name="spacesCountAroundEqualsSign" value="0"/>
+            <property name="newlinesCountBetweenOpenTagAndDeclare" value="1" />
+        </properties>
+    </rule>
+</ruleset>
