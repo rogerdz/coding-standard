@@ -10,15 +10,9 @@ Example
 Install
 -------
 
-Just create a `composer.json` file and run the `php composer.phar install` command to install it:
+Just run the following command to install it:
 
-```json
-{
-    "require": {
-        "jakub-onderka/php-console-highlighter": "0.*"
-    }
-}
-```
+    composer require --dev php-parallel-lint/php-console-highlighter:"0.*"
 
 Usage
 -------
@@ -37,6 +31,6 @@ echo $highlighter->getWholeFile($fileContent);
 
 ------
 
-[![Downloads this Month](https://img.shields.io/packagist/dm/jakub-onderka/php-console-highlighter.svg)](https://packagist.org/packages/jakub-onderka/php-console-highlighter)
-[![Build Status](https://travis-ci.org/JakubOnderka/PHP-Console-Highlighter.svg?branch=master)](https://travis-ci.org/JakubOnderka/PHP-Console-Highlighter)
-[![License](https://poser.pugx.org/jakub-onderka/php-console-highlighter/license.svg)](https://packagist.org/packages/jakub-onderka/php-console-highlighter)
+[![Downloads this Month](https://img.shields.io/packagist/dm/php-parallel-lint/php-console-highlighter.svg)](https://packagist.org/packages/php-parallel-lint/php-console-highlighter)
+[![Build Status](https://travis-ci.org/php-parallel-lint/PHP-Console-Highlighter.svg?branch=master)](https://travis-ci.org/php-parallel-lint/PHP-Console-Highlighter)
+[![License](https://poser.pugx.org/php-parallel-lint/php-console-highlighter/license.svg)](https://packagist.org/packages/php-parallel-lint/php-console-highlighter)

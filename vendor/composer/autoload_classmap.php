@@ -7,8 +7,10 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Attribute' => $vendorDir . '/symfony/polyfill-php80/Resources/stubs/Attribute.php',
+    'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
     'JsonException' => $vendorDir . '/symfony/polyfill-php73/Resources/stubs/JsonException.php',
     'Normalizer' => $vendorDir . '/symfony/polyfill-intl-normalizer/Resources/stubs/Normalizer.php',
+    'PhpToken' => $vendorDir . '/symfony/polyfill-php80/Resources/stubs/PhpToken.php',
     'SebastianBergmann\\Timer\\Duration' => $vendorDir . '/phpunit/php-timer/src/Duration.php',
     'SebastianBergmann\\Timer\\Exception' => $vendorDir . '/phpunit/php-timer/src/exceptions/Exception.php',
     'SebastianBergmann\\Timer\\NoActiveTimerException' => $vendorDir . '/phpunit/php-timer/src/exceptions/NoActiveTimerException.php',
