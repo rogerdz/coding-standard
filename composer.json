@@ -4,5 +4,8 @@
     "require": {
         "slevomat/coding-standard": "^6.4",
         "povils/phpmnd": "^2.4"
+    },
+    "config": {
+        "platform-check": false
     }
 }
