@@ -37,6 +37,12 @@ class DeclareStrictTypesSniff implements Sniff
 	/** @var int */
 	public $spacesCountAroundEqualsSign = 1;
 
+	/** @var int */
+	public $linesCountBeforeDeclare = 1;
+
+	/** @var int */
+	public $linesCountAfterDeclare = 1;
+
 	/**
 	 * @return array<int, (int|string)>
 	 */
