@@ -2,16 +2,32 @@
 <ruleset name="Bss Coding Standard">
     <description>Bss coding standard</description>
 
-    <rule ref="Bss.Commenting.UselessInheritDocComment"/>
-    <rule ref="SlevomatCodingStandard.Commenting.EmptyComment"/>
+    <rule ref="Bss.Commenting.UselessInheritDocComment">
+        <exclude-pattern>*.phtml</exclude-pattern>
+    </rule>
+    <rule ref="Bss.Classes.ObjectManager"/>
+    <rule ref="SlevomatCodingStandard.Commenting.EmptyComment">
+        <exclude-pattern>*.phtml</exclude-pattern>
+    </rule>
 
-    <rule ref="Squiz.Commenting.FunctionComment.Missing"/>
-    <rule ref="Squiz.Commenting.VariableComment.Missing"/>
-    <rule ref="Squiz.Commenting.ClassComment.Missing"/>
+    <rule ref="Squiz.Commenting.FunctionComment.Missing">
+        <exclude-pattern>*.phtml</exclude-pattern>
+    </rule>
+    <rule ref="Squiz.Commenting.VariableComment.Missing">
+        <exclude-pattern>*.phtml</exclude-pattern>
+    </rule>
+    <rule ref="Squiz.Commenting.ClassComment.Missing">
+        <exclude-pattern>*.phtml</exclude-pattern>
+    </rule>
 
-    <rule ref="SlevomatCodingStandard.Namespaces.DisallowGroupUse"/>
-    <rule ref="SlevomatCodingStandard.Namespaces.MultipleUsesPerLine"/>
+    <rule ref="SlevomatCodingStandard.Namespaces.DisallowGroupUse">
+        <exclude-pattern>*.phtml</exclude-pattern>
+    </rule>
+    <rule ref="SlevomatCodingStandard.Namespaces.MultipleUsesPerLine">
+        <exclude-pattern>*.phtml</exclude-pattern>
+    </rule>
     <rule ref="SlevomatCodingStandard.TypeHints.DeclareStrictTypes">
+        <exclude-pattern>*.phtml</exclude-pattern>
         <properties>
             <property name="linesCountBeforeDeclare" value="0"/>
             <property name="linesCountAfterDeclare" value="0"/>
