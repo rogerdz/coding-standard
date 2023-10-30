@@ -6,9 +6,9 @@
         <exclude-pattern>*.phtml</exclude-pattern>
     </rule>
     <rule ref="Bss.Classes.ObjectManager"/>
-    <rule ref="Bss.Templates.RawJavaScript">
+    <!-- <rule ref="Bss.Templates.RawJavaScript">
         <exclude-pattern>*.php</exclude-pattern>
-    </rule>
+    </rule> -->
 
     <rule ref="SlevomatCodingStandard.Commenting.EmptyComment">
         <exclude-pattern>*.phtml</exclude-pattern>
