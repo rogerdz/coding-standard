@@ -10,6 +10,18 @@
     <rule ref="Squiz.Commenting.FunctionComment.Missing">
         <exclude-pattern>*.phtml</exclude-pattern>
     </rule>
+    <rule ref="Squiz.Commenting.FunctionComment.MissingParamTag">
+        <exclude-pattern>*.phtml</exclude-pattern>
+    </rule>
+    <rule ref="Squiz.Commenting.FunctionComment.MissingType">
+        <exclude-pattern>*.phtml</exclude-pattern>
+    </rule>
+    <rule ref="Squiz.Commenting.FunctionComment.MissingParamName">
+        <exclude-pattern>*.phtml</exclude-pattern>
+    </rule>
+    <rule ref="Squiz.Commenting.FunctionComment.IncorrectTypeHint">
+        <exclude-pattern>*.phtml</exclude-pattern>
+    </rule>
     <rule ref="Squiz.Commenting.VariableComment.Missing">
         <exclude-pattern>*.phtml</exclude-pattern>
     </rule>
@@ -26,10 +38,10 @@
 
     <rule ref="SlevomatCodingStandard.TypeHints.DeclareStrictTypes">
         <exclude-pattern>*.phtml</exclude-pattern>
+        <exclude name="SlevomatCodingStandard.TypeHints.DeclareStrictTypes.IncorrectStrictTypesFormat"/>
         <properties>
             <property name="linesCountBeforeDeclare" value="0"/>
             <property name="linesCountAfterDeclare" value="1"/>
-            <!-- <property name="spacesCountAroundEqualsSign" value="0"/> -->
         </properties>
     </rule>
     <rule ref="SlevomatCodingStandard.TypeHints.PropertyTypeHint"/>
@@ -49,7 +61,7 @@
     <rule ref="SlevomatCodingStandard.Classes.MethodSpacing">
         <properties>
             <property name="minLinesCount" value="1"/>
-            <property name="maxLinesCount" value="4"/>
+            <property name="maxLinesCount" value="2"/>
         </properties>
     </rule>
 </ruleset>
