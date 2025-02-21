@@ -22,10 +22,21 @@
     <rule ref="Squiz.Commenting.FunctionComment.IncorrectTypeHint">
         <exclude-pattern>*.phtml</exclude-pattern>
     </rule>
+
     <rule ref="Squiz.Commenting.VariableComment.Missing">
         <exclude-pattern>*.phtml</exclude-pattern>
     </rule>
+    <rule ref="Squiz.Commenting.VariableComment.MissingVar">
+        <exclude-pattern>*.phtml</exclude-pattern>
+    </rule>
+    <rule ref="Squiz.Commenting.VariableComment.WrongStyle">
+        <exclude-pattern>*.phtml</exclude-pattern>
+    </rule>
+
     <rule ref="Squiz.Commenting.ClassComment.Missing">
+        <exclude-pattern>*.phtml</exclude-pattern>
+    </rule>
+    <rule ref="Squiz.Commenting.ClassComment.WrongStyle">
         <exclude-pattern>*.phtml</exclude-pattern>
     </rule>
 
@@ -33,6 +44,9 @@
         <exclude-pattern>*.phtml</exclude-pattern>
     </rule>
     <rule ref="SlevomatCodingStandard.Namespaces.MultipleUsesPerLine">
+        <exclude-pattern>*.phtml</exclude-pattern>
+    </rule>
+    <rule ref="SlevomatCodingStandard.Namespaces.RequireOneNamespaceInFile">
         <exclude-pattern>*.phtml</exclude-pattern>
     </rule>
 
