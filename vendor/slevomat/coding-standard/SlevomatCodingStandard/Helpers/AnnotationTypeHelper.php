@@ -23,6 +23,7 @@ use function array_merge;
 use function count;
 use function in_array;
 use function preg_replace;
+use function sprintf;
 use function strtolower;
 use function substr;
 
@@ -273,6 +274,10 @@ class AnnotationTypeHelper
 			$exportedTypeNode = substr($exportedTypeNode, 1, -1);
 		}
 
+		if ($typeNode instanceof ArrayTypeNode && $typeNode->type instanceof CallableTypeNode) {
+			$exportedTypeNode = sprintf('(%s)[]', substr($exportedTypeNode, 0, -2));
+		}
+
 		return $exportedTypeNode;
 	}
 
@@ -360,25 +365,6 @@ class AnnotationTypeHelper
 		return clone $masterTypeNode;
 	}
 
-	/**
-	 * @param UnionTypeNode|IntersectionTypeNode $typeNode
-	 * @return bool
-	 */
-	public static function containsNullType(TypeNode $typeNode): bool
-	{
-		foreach ($typeNode->types as $innerTypeNode) {
-			if (!$innerTypeNode instanceof IdentifierTypeNode) {
-				continue;
-			}
-
-			if (strtolower($innerTypeNode->name) === 'null') {
-				return true;
-			}
-		}
-
-		return false;
-	}
-
 	public static function containsStaticOrThisType(TypeNode $typeNode): bool
 	{
 		if ($typeNode instanceof ThisTypeNode) {
@@ -448,6 +434,10 @@ class AnnotationTypeHelper
 
 	public static function containsJustTwoTypes(TypeNode $typeNode): bool
 	{
+		if ($typeNode instanceof NullableTypeNode && self::containsOneType($typeNode->type)) {
+			return true;
+		}
+
 		if (
 			!$typeNode instanceof UnionTypeNode
 			&& !$typeNode instanceof IntersectionTypeNode
@@ -456,17 +446,6 @@ class AnnotationTypeHelper
 		}
 
 		return count($typeNode->types) === 2;
-	}
-
-	public static function isCompoundOfNull(TypeNode $typeNode): bool
-	{
-		if (!self::containsJustTwoTypes($typeNode)) {
-			return false;
-		}
-
-		/** @var UnionTypeNode|IntersectionTypeNode $typeNode */
-		$typeNode = $typeNode;
-		return self::containsNullType($typeNode);
 	}
 
 	/**
@@ -556,6 +535,11 @@ class AnnotationTypeHelper
 		}
 
 		if ($typeNode instanceof IdentifierTypeNode) {
+			if (TypeHintHelper::isTypeDefinedInAnnotation($phpcsFile, $pointer, $typeNode->name)) {
+				// We can expect it's better type for traversable
+				return true;
+			}
+
 			if (!$inTraversable) {
 				return false;
 			}
@@ -564,6 +548,10 @@ class AnnotationTypeHelper
 				TypeHintHelper::getFullyQualifiedTypeHint($phpcsFile, $pointer, $typeNode->name),
 				$traversableTypeHints
 			);
+		}
+
+		if ($typeNode instanceof ConstTypeNode) {
+			return $inTraversable;
 		}
 
 		if ($typeNode instanceof CallableTypeNode) {
@@ -603,21 +591,11 @@ class AnnotationTypeHelper
 	}
 
 	/**
-	 * @param UnionTypeNode|IntersectionTypeNode $typeNode
-	 * @return TypeNode
-	 */
-	public static function getTypeFromNullableType(TypeNode $typeNode): TypeNode
-	{
-		return $typeNode->types[0] instanceof IdentifierTypeNode && strtolower($typeNode->types[0]->name) === 'null'
-			? $typeNode->types[1]
-			: $typeNode->types[0];
-	}
-
-	/**
 	 * @param CallableTypeNode|GenericTypeNode|IdentifierTypeNode|ThisTypeNode|ArrayTypeNode|ArrayShapeNode|ConstTypeNode $typeNode
+	 * @param bool $enableUnionTypeHint
 	 * @return string
 	 */
-	public static function getTypeHintFromOneType(TypeNode $typeNode): string
+	public static function getTypeHintFromOneType(TypeNode $typeNode, bool $enableUnionTypeHint = false): string
 	{
 		if ($typeNode instanceof GenericTypeNode) {
 			return $typeNode->type->name;
@@ -629,7 +607,7 @@ class AnnotationTypeHelper
 			}
 
 			if (strtolower($typeNode->name) === 'false') {
-				return 'bool';
+				return $enableUnionTypeHint ? 'false' : 'bool';
 			}
 
 			if (in_array(strtolower($typeNode->name), ['class-string', 'trait-string', 'callable-string', 'numeric-string'], true)) {
@@ -673,16 +651,18 @@ class AnnotationTypeHelper
 	 * @param File $phpcsFile
 	 * @param int $pointer
 	 * @param array<int, string> $traversableTypeHints
-	 * @return string|null
+	 * @param bool $enableUnionTypeHint
+	 * @return string[]
 	 */
-	public static function getTraversableTypeHintFromType(
+	public static function getTraversableTypeHintsFromType(
 		TypeNode $typeNode,
 		File $phpcsFile,
 		int $pointer,
-		array $traversableTypeHints
-	): ?string
+		array $traversableTypeHints,
+		bool $enableUnionTypeHint = false
+	): array
 	{
-		$typeHint = null;
+		$typeHints = [];
 
 		foreach ($typeNode->types as $type) {
 			if (
@@ -690,17 +670,24 @@ class AnnotationTypeHelper
 				|| $type instanceof ThisTypeNode
 				|| $type instanceof IdentifierTypeNode
 			) {
-				$typeHint = self::getTypeHintFromOneType($type);
-				break;
+				$typeHints[] = self::getTypeHintFromOneType($type);
 			}
 		}
 
-		return $typeHint !== null && TypeHintHelper::isTraversableType(
-			TypeHintHelper::getFullyQualifiedTypeHint($phpcsFile, $pointer, $typeHint),
-			$traversableTypeHints
-		)
-			? $typeHint
-			: null;
+		if (!$enableUnionTypeHint && count($typeHints) > 1) {
+			return [];
+		}
+
+		foreach ($typeHints as $typeHint) {
+			if (!TypeHintHelper::isTraversableType(
+				TypeHintHelper::getFullyQualifiedTypeHint($phpcsFile, $pointer, $typeHint),
+				$traversableTypeHints
+			)) {
+				return [];
+			}
+		}
+
+		return $typeHints;
 	}
 
 	/**

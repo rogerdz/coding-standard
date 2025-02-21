@@ -7,10 +7,6 @@
     </rule>
     <rule ref="Bss.Classes.ObjectManager"/>
 
-    <rule ref="SlevomatCodingStandard.Commenting.EmptyComment">
-        <exclude-pattern>*.phtml</exclude-pattern>
-    </rule>
-
     <rule ref="Squiz.Commenting.FunctionComment.Missing">
         <exclude-pattern>*.phtml</exclude-pattern>
     </rule>
@@ -27,13 +23,33 @@
     <rule ref="SlevomatCodingStandard.Namespaces.MultipleUsesPerLine">
         <exclude-pattern>*.phtml</exclude-pattern>
     </rule>
+
     <rule ref="SlevomatCodingStandard.TypeHints.DeclareStrictTypes">
         <exclude-pattern>*.phtml</exclude-pattern>
         <properties>
             <property name="linesCountBeforeDeclare" value="0"/>
-            <property name="linesCountAfterDeclare" value="0"/>
-            <property name="spacesCountAroundEqualsSign" value="0"/>
-            <property name="newlinesCountBetweenOpenTagAndDeclare" value="1" />
+            <property name="linesCountAfterDeclare" value="1"/>
+            <!-- <property name="spacesCountAroundEqualsSign" value="0"/> -->
+        </properties>
+    </rule>
+    <rule ref="SlevomatCodingStandard.TypeHints.PropertyTypeHint"/>
+    <rule ref="SlevomatCodingStandard.TypeHints.UselessConstantTypeHint"/>
+
+    <rule ref="SlevomatCodingStandard.Commenting.EmptyComment">
+        <exclude-pattern>*.phtml</exclude-pattern>
+    </rule>
+    <rule ref="SlevomatCodingStandard.Commenting.UselessFunctionDocComment">
+        <exclude-pattern>*.phtml</exclude-pattern>
+    </rule>
+
+    <rule ref="SlevomatCodingStandard.Classes.RequireConstructorPropertyPromotion">
+        <exclude-pattern>*.phtml</exclude-pattern>
+    </rule>
+    <rule ref="SlevomatCodingStandard.Classes.ClassConstantVisibility"/>
+    <rule ref="SlevomatCodingStandard.Classes.MethodSpacing">
+        <properties>
+            <property name="minLinesCount" value="1"/>
+            <property name="maxLinesCount" value="4"/>
         </properties>
     </rule>
 </ruleset>

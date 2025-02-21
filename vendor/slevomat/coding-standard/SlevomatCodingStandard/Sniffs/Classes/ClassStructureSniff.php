@@ -168,6 +168,8 @@ class ClassStructureSniff implements Sniff
 		'__unset' => self::GROUP_MAGIC_METHODS,
 		'__sleep' => self::GROUP_MAGIC_METHODS,
 		'__wakeup' => self::GROUP_MAGIC_METHODS,
+		'__serialize' => self::GROUP_MAGIC_METHODS,
+		'__unserialize' => self::GROUP_MAGIC_METHODS,
 		'__tostring' => self::GROUP_MAGIC_METHODS,
 		'__invoke' => self::GROUP_MAGIC_METHODS,
 		'__set_state' => self::GROUP_MAGIC_METHODS,
@@ -275,7 +277,7 @@ class ClassStructureSniff implements Sniff
 			$currentTokenPointer = TokenHelper::findNext(
 				$phpcsFile,
 				$groupTokenTypes,
-				$currentToken['scope_closer'] ?? $currentTokenPointer + 1,
+				($currentToken['scope_closer'] ?? $currentTokenPointer) + 1,
 				$rootScopeToken['scope_closer']
 			);
 			if ($currentTokenPointer === null) {
@@ -440,7 +442,7 @@ class ClassStructureSniff implements Sniff
 
 		$returnTypeHint = FunctionHelper::findReturnTypeHint($phpcsFile, $pointer);
 		if ($returnTypeHint !== null) {
-			return in_array($returnTypeHint->getTypeHint(), ['self', $parentClassName], true);
+			return in_array($returnTypeHint->getTypeHintWithoutNullabilitySymbol(), ['self', $parentClassName], true);
 		}
 
 		$returnAnnotation = FunctionHelper::findReturnAnnotation($phpcsFile, $pointer);
@@ -502,7 +504,7 @@ class ClassStructureSniff implements Sniff
 
 	private function findGroupStartPointer(File $phpcsFile, int $memberPointer, ?int $previousMemberEndPointer = null): int
 	{
-		$startPointer = DocCommentHelper::findDocCommentOpenToken($phpcsFile, $memberPointer - 1);
+		$startPointer = DocCommentHelper::findDocCommentOpenPointer($phpcsFile, $memberPointer - 1);
 		if ($startPointer === null) {
 			if ($previousMemberEndPointer === null) {
 				$previousMemberEndPointer = $this->findPreviousMemberEndPointer($phpcsFile, $memberPointer);

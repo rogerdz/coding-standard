@@ -30,6 +30,7 @@ use const T_DO;
 use const T_DOUBLE_ARROW;
 use const T_DOUBLE_COLON;
 use const T_DOUBLE_QUOTED_STRING;
+use const T_ECHO;
 use const T_ELSEIF;
 use const T_EQUAL;
 use const T_FOR;
@@ -59,6 +60,7 @@ use const T_USE;
 use const T_VARIABLE;
 use const T_WHILE;
 use const T_XOR_EQUAL;
+use const T_YIELD;
 
 class UnusedVariableSniff implements Sniff
 {
@@ -115,6 +117,10 @@ class UnusedVariableSniff implements Sniff
 			return;
 		}
 
+		if (in_array($tokens[$previousPointer]['code'], Tokens::$castTokens, true)) {
+			$previousPointer = TokenHelper::findPreviousEffective($phpcsFile, $previousPointer - 1);
+		}
+
 		if (in_array($tokens[$previousPointer]['code'], [
 			T_EQUAL,
 			T_PLUS_EQUAL,
@@ -129,6 +135,7 @@ class UnusedVariableSniff implements Sniff
 			T_SL_EQUAL,
 			T_SR_EQUAL,
 			T_CONCAT_EQUAL,
+			T_YIELD,
 		], true)) {
 			return;
 		}
@@ -235,8 +242,6 @@ class UnusedVariableSniff implements Sniff
 		}
 
 		$actualPointer = $variablePointer;
-		$parenthesisOpenerPointer = null;
-		$parenthesisOwnerPointer = null;
 		do {
 			$parenthesisOpenerPointer = $this->findOpenerOfNestedParentheses($phpcsFile, $actualPointer);
 			$parenthesisOwnerPointer = $this->findOwnerOfNestedParentheses($phpcsFile, $actualPointer);
@@ -254,7 +259,7 @@ class UnusedVariableSniff implements Sniff
 				return true;
 			}
 
-			return !in_array($tokens[$parenthesisOwnerPointer]['code'], [T_FOR, T_WHILE], true);
+			return !in_array($tokens[$parenthesisOwnerPointer]['code'], [T_FOR, T_WHILE, T_IF, T_ELSEIF], true);
 		}
 
 		if ($parenthesisOwnerPointer !== null && $tokens[$parenthesisOwnerPointer]['code'] === T_FOREACH) {
@@ -506,14 +511,21 @@ class UnusedVariableSniff implements Sniff
 
 	private function isValueInForeachAndErrorIsIgnored(File $phpcsFile, int $variablePointer): bool
 	{
-		if (!$this->ignoreUnusedValuesWhenOnlyKeysAreUsedInForeach) {
-			return false;
-		}
-
 		$tokens = $phpcsFile->getTokens();
 
 		$parenthesisOwnerPointer = $this->findNestedParenthesisWithOwner($phpcsFile, $variablePointer);
-		return $parenthesisOwnerPointer !== null && $tokens[$parenthesisOwnerPointer]['code'] === T_FOREACH;
+		$isInForeach = $parenthesisOwnerPointer !== null && $tokens[$parenthesisOwnerPointer]['code'] === T_FOREACH;
+
+		if (!$isInForeach) {
+			return false;
+		}
+
+		$pointerAfterVariable = TokenHelper::findNextEffective($phpcsFile, $variablePointer + 1);
+		if ($pointerAfterVariable !== null && $tokens[$pointerAfterVariable]['code'] === T_DOUBLE_ARROW) {
+			return false;
+		}
+
+		return $this->ignoreUnusedValuesWhenOnlyKeysAreUsedInForeach;
 	}
 
 	private function isStaticOrGlobalVariable(File $phpcsFile, int $functionPointer, string $variableName): bool
@@ -630,9 +642,13 @@ class UnusedVariableSniff implements Sniff
 			return false;
 		}
 
+		if ($tokens[$previousPointer]['code'] === T_OPEN_PARENTHESIS) {
+			$previousPointer = TokenHelper::findPreviousEffective($phpcsFile, $previousPointer - 1);
+		}
+
 		return in_array(
 			$tokens[$previousPointer]['code'],
-			array_merge([T_STRING_CONCAT], Tokens::$operators, Tokens::$assignmentTokens, Tokens::$booleanOperators),
+			array_merge([T_STRING_CONCAT, T_ECHO], Tokens::$operators, Tokens::$assignmentTokens, Tokens::$booleanOperators),
 			true
 		);
 	}

@@ -2,7 +2,7 @@
     "name": "bss/coding-standard",
     "version": "1.0.0",
     "require": {
-        "slevomat/coding-standard": "^6.4",
+        "slevomat/coding-standard": "^7.0.20",
         "povils/phpmnd": "^2.4"
     },
     "config": {

@@ -43,6 +43,7 @@ use const T_LNUMBER;
 use const T_LOGICAL_AND;
 use const T_LOGICAL_OR;
 use const T_LOGICAL_XOR;
+use const T_MATCH_ARROW;
 use const T_MINUS;
 use const T_NS_SEPARATOR;
 use const T_NULL;
@@ -60,6 +61,9 @@ use const T_UNSET_CAST;
 use const T_VARIABLE;
 use const T_WHITESPACE;
 
+/**
+ * @internal
+ */
 class YodaHelper
 {
 
@@ -288,7 +292,9 @@ class YodaHelper
 		}
 
 		$phpcsFile->fixer->addContent($firstOldPointer, implode('', array_map(static function (array $token): string {
-			return $token['content'];
+			/** @var string $content */
+			$content = $token['content'];
+			return $content;
 		}, $newTokens)));
 	}
 
@@ -344,9 +350,11 @@ class YodaHelper
 				T_RETURN => true,
 				T_COMMA => true,
 				T_CLOSE_CURLY_BRACKET => true,
+				T_MATCH_ARROW => true,
 			];
 
 			$stopTokenCodes += array_fill_keys(array_keys(Tokens::$assignmentTokens), true);
+			$stopTokenCodes += array_fill_keys(array_keys(Tokens::$commentTokens), true);
 		}
 
 		return $stopTokenCodes;
