@@ -2,6 +2,10 @@
 <ruleset name="Bss Coding Standard">
     <description>Bss coding standard</description>
 
+    <rule ref="Internal.NoCodeFound">
+        <severity>0</severity>
+    </rule>
+
     <rule ref="Bss.Commenting.UselessInheritDocComment">
         <exclude-pattern>*.phtml</exclude-pattern>
     </rule>
