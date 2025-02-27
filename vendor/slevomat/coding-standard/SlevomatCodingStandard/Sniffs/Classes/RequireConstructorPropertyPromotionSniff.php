@@ -147,11 +147,11 @@ class RequireConstructorPropertyPromotionSniff implements Sniff
 					continue;
 				}
 
-				$propertyTypeHint = PropertyHelper::findTypeHint($phpcsFile, $propertyPointer);
-				$parameterTypeHint = FunctionHelper::getParametersTypeHints($phpcsFile, $functionPointer)[$parameterName];
-				if (!$this->areTypeHintEqual($parameterTypeHint, $propertyTypeHint)) {
-					continue;
-				}
+				// $propertyTypeHint = PropertyHelper::findTypeHint($phpcsFile, $propertyPointer);
+				// $parameterTypeHint = FunctionHelper::getParametersTypeHints($phpcsFile, $functionPointer)[$parameterName];
+				// if (!$this->areTypeHintEqual($parameterTypeHint, $propertyTypeHint)) {
+				// 	continue;
+				// }
 
 				$assignmentPointer = $this->getAssignment($phpcsFile, $functionPointer, $parameterName);
 				if ($assignmentPointer === null) {
