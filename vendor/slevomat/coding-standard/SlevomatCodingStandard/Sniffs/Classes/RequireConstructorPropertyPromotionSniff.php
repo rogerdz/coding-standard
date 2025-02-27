@@ -148,7 +148,7 @@ class RequireConstructorPropertyPromotionSniff implements Sniff
 				}
 
 				// $propertyTypeHint = PropertyHelper::findTypeHint($phpcsFile, $propertyPointer);
-				// $parameterTypeHint = FunctionHelper::getParametersTypeHints($phpcsFile, $functionPointer)[$parameterName];
+				$parameterTypeHint = FunctionHelper::getParametersTypeHints($phpcsFile, $functionPointer)[$parameterName];
 				// if (!$this->areTypeHintEqual($parameterTypeHint, $propertyTypeHint)) {
 				// 	continue;
 				// }
@@ -167,6 +167,34 @@ class RequireConstructorPropertyPromotionSniff implements Sniff
 					$propertyPointer,
 					self::CODE_REQUIRED_CONSTRUCTOR_PROPERTY_PROMOTION
 				);
+
+				// custom check
+				if ($parameterTypeHint === null) {
+					$phpcsFile->addError(
+						sprintf(
+							'%s does not have native type hint.',
+							$propertyName,
+						),
+						$parameterPointer,
+						'MissingPropertyAnyTypeHint'
+					);
+				}
+
+				$visibilityPointer = TokenHelper::findPrevious($phpcsFile, Tokens::$scopeModifiers, $parameterPointer - 1);
+				$visibility = $tokens[$visibilityPointer]['content'];
+				if (in_array($tokens[$visibilityPointer]['code'], [T_PUBLIC, T_PROTECTED, T_PRIVATE], true)) {
+					if (!array_key_exists('nested_parenthesis', $tokens[$visibilityPointer])) {
+						$phpcsFile->addError(
+							sprintf(
+								'%s visibility missing.',
+								$propertyName,
+							),
+							$parameterPointer,
+							'MissingPropertyVisibility'
+						);
+					}
+				}
+				// end
 
 				if (!$fix) {
 					continue;
